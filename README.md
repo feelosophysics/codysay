@@ -247,7 +247,7 @@ WARNING: DOCKER_INSECURE_NO_IPTABLES_RAW is set # 네트워크 보안 관련 경
 ### 이미지 확인
 
 ```zsh
-$ docker images
+$ docker images # 내 로컬에 저장되어 있는 도커 이미지들의 목록을 보여주는 명령어
 REPOSITORY   TAG       IMAGE ID
 ```
 
@@ -255,20 +255,65 @@ REPOSITORY   TAG       IMAGE ID
 
 ```zsh
 $ docker run hello-world
+Unable to find image 'hello-world:latest' locally # 해당 Docker image가 없어서 공식 저장소인 인터넷(Docker Hub)에서 다운(pull).
+latest: Pulling from library/hello-world
+4f55086f7dd0: Pull complete
+Digest: sha256:452a468a4bf985040037cb6d5392410206e47db9bf5b7278d281f94d1c2d0931
+Status: Downloaded newer image for hello-world:latest # 이미지를 다 내려받았고, 그 이미지를 기반으로 컨테이너를 생성해서Create 실행Run 했음.
 
-Hello from Docker!
+Hello from Docker! # 컨테이너 내부에서 실행된 프로그램이 출력한 결과물.
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+# Docker Client: 우리가 터미널에 입력한 docker run 명령어를 받습니다.
+# Docker Daemon: 클라이언트의 명령을 실제로 수행하는 '일꾼'입니다. 이미지가 없으면 Docker Hub에서 가져옵니다.
+# Container 생성: 가져온 이미지(붕어빵 틀)를 가지고 컨테이너(붕어빵)를 만듭니다.
+# 출력 전달: 컨테이너 안에서 프로그램이 실행되고, 그 결과를 다시 우리 터미널 화면으로 보여줍니다.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
 ```
 
 ### Ubuntu 컨테이너 실행 및 접속
 
 ```zsh
 $ docker run -it ubuntu zsh
+Unable to find image 'ubuntu:latest' locally # 로컬에 우분투 이미지가 없어서 Docker Hub에서 다운로드
+latest: Pulling from library/ubuntu
+817807f3c64e: Pull complete 
+Digest: sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7072feef0c
+Status: Downloaded newer image for ubuntu:latest # 최신 이미지를 성공적으로 내려받음.
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: exec: "zsh": executable file not found in $PATH # 컨테이너 내부의 환경 변수($PATH)를 다 뒤져봐도 zsh라는 실행 파일을 찾을 수 없다. ubuntu:latest라는 공식 이미지는 아주 가벼운 기본 상태로 제공된다. 이 기본 이미지 안에는 우리가 흔히 사용하는 bash 쉘은 포함되어 있지만, zsh는 기본적으로 설치되어 있지 않기 때문에 실행할 수 없는 것.
 
-root@container:/# ls
-bin  boot  dev  etc
+Run 'docker run --help' for more information
 
-root@container:/# echo hello
-hello
+$ ls
+Desktop		Downloads	Movies		OrbStack	Public
+Documents	Library		Music		Pictures
+
+$ echo hello
+hello # echo 명령어는 터미널에서 **"입력한 문자열이나 변수의 값을 화면에 그대로 출력하라"**는 명령
+
+# echo 활용 예시
+# test.txt라는 파일을 만들고, 그 안에 'Hello'라는 내용을 넣음
+# $ echo "Hello" > test.txt
+
+# 기존 파일 내용에 이어 붙이기 (>>)
+# $ echo "World" >> test.txt
 ```
 
 ---
@@ -276,10 +321,65 @@ hello
 ## 7. 컨테이너 운영 명령
 
 ```zsh
-$ docker ps
-$ docker ps -a
-$ docker logs <container_id>
-$ docker stats
+$ docker ps # 현재 실행 중인 컨테이너들의 목록만 보여줍니다.
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+$ docker ps -a # 옵션 a(=all) 실행 중인 컨테이너뿐만 아니라, 중지되었거나(Exited) 오류로 종료된 컨테이너까지 포함하여 모든 컨테이너의 목록을 보여줍니다. 내가 이전에 실행했다가 꺼버린 컨테이너들은 어디로 갔을까요? 사라진 게 아니라 도커 내부에 기록으로 남아 있습니다. 이 명령어를 쓰면 그 기록까지 전부 볼 수 있습니다.
+CONTAINER ID   IMAGE         COMMAND    CREATED          STATUS                      PORTS     NAMES
+eb1998fa94bb   ubuntu        "zsh"      18 minutes ago   Created                               funny_boyd
+bf26a4b6348d   hello-world   "/hello"   25 minutes ago   Exited (0) 25 minutes ago             hungry_chatterjee
+
+$ docker logs <container_id> # 특정 컨테이너 안에서 생성된 출력(로그) 기록을 가져옵니다. 컨테이너 안에서 무슨 일이 일어나고 있는지 확인하는 '블랙박스'와 같습니다.
+$ docker logs hungry_chatterjee
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
+
+$ docker stats 실행 중인 모든 컨테이너가 **현재 사용하고 있는 시스템 자원(CPU, 메모리, 네트워크 등)**을 실시간으로 보여줍니다.
+Last login: Wed Apr  1 14:49:29 on console
+f22losophysics1091@c6r5s4 ~ % docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+f22losophysics1091@c6r5s4 ~ % docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+4f55086f7dd0: Pull complete 
+Digest: sha256:452a468a4bf985040037cb6d5392410206e47db9bf5b7278d281f94d1c2d0931
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT   MEM %     NET I/O   BLOCK I/O   PIDS 
 ```
 
 ---
