@@ -755,11 +755,26 @@ git init
 # 현재 폴더를 Git 저장소로 초기화합니다.
 # 이 폴더에 **'전용 CCTV'**를 설치하는 것과 같습니다. 이제부터 파일이 생기거나 지워지는 것을 Git이 감시하기 시작합니다.
 
-git config --global user.name
-git config --global user.email
+git config --global user.name [이름]
+git config --global user.email [이메일]
 # 의미: 누가 코드를 짰는지 이름표를 설정하는 것입니다.
 # 중요성: 나중에 협업할 때 "이 코드는 누가 수정했지?"를 확인하기 위해 처음에 한 번만 설정하면 됩니다.
 ```
+
+현재 상황 확인
+```
+git status
+```
+이 명령어를 치면 Git이 현재 폴더를 슥 훑어보고 다음 세 부류로 나누어 리포트를 해줍니다.
+ ① "너 이거 새로 만들었니? (Untracked files)" - 보통 빨간색
+  의미: 새로 만든 파일인데, 아직 Git이 관리하라고 명령(git add)하지 않은 파일들입니다.
+  상태: Git의 감시망 밖에 있는 상태입니다.
+ ② "수정은 했는데, 장바구니에 안 담았네? (Changes not staged for commit)" - 보통 빨간색
+  의미: 원래 있던 파일인데 내용이 바뀌었습니다. 하지만 아직 저장할 목록(git add)에는 올리지 않은 상태입니다.
+ ③ "저장할 준비 완료! (Changes to be committed)" - 보통 초록색
+  의미: git add를 마쳐서 **장바구니(Staging Area)**에 예쁘게 담긴 상태입니다.
+  상태: 이제 git commit만 하면 사진(버전)이 찍히는 단계입니다.
+<img width="552" height="573" alt="image" src="https://github.com/user-attachments/assets/651cfcb7-2e13-4204-8f3a-47b1b7103e94" />
 
 변경사항 저장하기 (스냅샷 찍기)
 ```
