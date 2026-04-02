@@ -413,8 +413,31 @@ CMD : 기본 실행 명령(간단할 때)
 ENTRYPOINT : "고정 실행"(강제 실행)
 
 (6) 기타 중요
-ENV : 
+ENV : 환경 변수 설정
+EXPOSE : 포트 선언 안내문(실제로 포트를 열지 않음, "이 컨테이너는 3000 포트를 사용할 예정"이라고 알려주는 메타 정보)
 
+예시
+```dockerfile
+FROM node:18           # 시작 환경
+
+WORKDIR /app           # 작업 폴더
+
+COPY package.json .    # 의존성 파일 먼저 복사
+RUN npm install        # 설치
+
+COPY . .               # 나머지 코드 복사
+
+CMD ["node", "app.js"] # 실행
+```
+👉 여기서 중요한 설계 포인트:
+왜 COPY package.json을 먼저 할까?
+→ 캐싱 최적화
+→ 코드만 바뀌면 npm install 다시 안 하려고
+
+초보가 꼭 잡아야 할 3가지
+1. Dockerfile은 위에서 아래로 실행된다
+2. 각 줄은 레이어(스냅샷)로 저장된다
+3. RUN vs CMD는 완전히 다른 시점이다
 
 ```dockerfile
 FROM nginx:alpine
