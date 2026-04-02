@@ -501,7 +501,7 @@ $ docker run -d -p 8080:80 --name web1 my-nginx
 
 ```zsh
 $ curl http://localhost:8080
-<h1>Hello Docker</h1>
+Hello Docker
 ```
 <img width="331" height="170" alt="image" src="https://github.com/user-attachments/assets/cb238540-eb17-4dc8-b7ea-2da745423cd2" />
 
@@ -510,9 +510,9 @@ $ curl http://localhost:8080
 ## 9. 포트 매핑 검증
 
 ```zsh
-$ docker run -d -p 8081:80 my-web:1.0
+$ docker run -d -p 8081:80 --name web2 my-nginx
 $ curl http://localhost:8081
-<h1>Hello Docker</h1>
+Hello Docker
 ```
 
 포트 매핑을 통해 동일한 컨테이너 이미지를 서로 다른 포트로 접근 가능함을 확인하였다.
@@ -522,30 +522,38 @@ $ curl http://localhost:8081
 ## 10. 바인드 마운트 실습
 
 ```zsh
-$ docker run -d -p 8082:80 \
+$ docker run -d -p 8081:80 \
   -v $(pwd)/app:/usr/share/nginx/html \
   --name bind-test nginx:alpine
 ```
 
+*바인드 마운트(-v) 사용 시 주의사항*
+형식: [호스트 경로]:[컨테이너 내부 경로]
+주의: 콜론(:) 앞뒤에 공백이 있으면 안 됨.
+작동 원리: 호스트(내 컴퓨터)의 폴더를 컨테이너 폴더에 '덮어쓰기' 함.
+따라서 현재 $(pwd)(내 폴더)에 index.html이 없다면, 컨테이너 안의 기존 index.html도 사라지고 빈 폴더처럼 보일 수 있음. (반드시 index.html이 있는 곳에서 실행할 것!)
+
 ### 파일 수정 전
 
 ```zsh
-$ curl http://localhost:8082
-<h1>Hello Docker</h1>
+$ curl http://localhost:8081
+Hello Docker
 ```
 
 ### 파일 수정
 
 ```zsh
-$ echo "<h1>Updated</h1>" > app/index.html
+$ echo "Hello bindmount!" > index.html
 ```
 
 ### 수정 후
 
 ```zsh
 $ curl http://localhost:8082
-<h1>Updated</h1>
+Hello bindmount!
 ```
+
+<img width="445" height="99" alt="image" src="https://github.com/user-attachments/assets/50945a3a-d000-43c8-9c21-cbcda6a5d285" />
 
 ---
 
