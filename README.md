@@ -442,39 +442,60 @@ CMD ["node", "app.js"] # 실행
 ```dockerfile
 FROM nginx:alpine
 
-LABEL maintainer="user"
+LABEL description="custom nginx for practice"
 
-ENV APP_ENV=dev
+COPY index.html /usr/share/nginx/html/index.html
 
-COPY ./app /usr/share/nginx/html
+EXPOSE 80
 ```
 
 ### 디렉토리 구조
 
 ```
-.
-├── Dockerfile
-└── app
-    └── index.html
+project/
+ ├── Dockerfile
+ └── index.html
 ```
 
 ### index.html
 
 ```html
-<h1>Hello Docker</h1>
+<<h1>Hello Docker</h1>
 ```
 
 ### 이미지 빌드
 
 ```zsh
-$ docker build -t my-web:1.0 .
+docker build -t my-nginx .
+```
+-t my-nginx: 생성될 이미지의 이름(태그)을 my-nginx로 지정합니다.
+.: 현재 디렉토리(Current Directory)에 있는 Dockerfile을 사용하여 빌드하라는 뜻입니다.
+
+```
+[+] Building 2.7s (7/7) FINISHED                                                     docker:orbstack # 전체 빌드 과정이 2.7초 만에 끝났으며, 총 7개의 단계를 모두 성공적으로 완료했다는 뜻입니다.
+ => [internal] load build definition from Dockerfile                                            0.1s # 작성하신 Dockerfile 파일을 읽어와서 어떤 작업을 할지 파악하는 단계입니다.
+ => => transferring dockerfile: 162B                                                            0.0s
+ => [internal] load metadata for docker.io/library/nginx:alpine                                 1.6s # 베이스 이미지인 nginx:alpine에 대한 최신 정보를 도커 허브(Docker Hub)에서 확인하는 과정입니다.
+ => [internal] load .dockerignore                                                               0.1s
+ => => transferring context: 2B                                                                 0.0s
+ => [internal] load build context                                                               0.2s
+ => => transferring context: 42B                                                                0.0s
+ => CACHED [1/2] FROM docker.io/library/nginx:alpine@sha256:e7257f1ef28ba17cf7c248cb8ccf6f0c6e  0.0s # 이전에 이 이미지를 다운로드한 적이 있어서, 다시 받지 않고 컴퓨터에 저장된 것을 그대로 사용했다는 뜻입니다. (시간 절약)
+ => [2/2] COPY index.html /usr/share/nginx/html/index.html                                      0.2s # 가장 중요한 단계입니다! 사용자의 컴퓨터에 있는 index.html 파일을 이미지 내부의 웹 서버 경로로 복사했습니다. 이제 이 이미지를 실행하면 본인이 만든 페이지가 뜨게 됩니다.
+ => exporting to image                                                                          0.2s # 빌드된 각 단계(레이어)를 하나로 묶어 최종 이미지 파일로 만드는 과정입니다.
+ => => exporting layers                                                                         0.2s
+ => => writing image sha256:3635fa6d7c46d765695963621518d46105869cc953f024e095280bbd2008c06a    0.0s # 생성된 이미지에 고유한 주민등록번호 같은 ID(sha256...)를 부여했습니다.
+ => => naming to docker.io/library/my-nginx # 이미지의 이름을 처음에 명령하신 대로 my-nginx라고 붙였습니다.
 ```
 
 ### 컨테이너 실행
 
 ```zsh
-$ docker run -d -p 8080:80 --name my-web my-web:1.0
+$ docker run -d -p 8080:80 --name web1 my-nginx
+71f9f8bb3798d856d88d6e9de876ad452b6acb6354da50ae486c451d9ad52ace
 ```
+-d: 백그라운드에서 실행
+-p 8080:80: 내 컴퓨터의 8080번 포트를 컨테이너의 80번 포트와 연결
 
 ### 접속 확인
 
@@ -482,6 +503,7 @@ $ docker run -d -p 8080:80 --name my-web my-web:1.0
 $ curl http://localhost:8080
 <h1>Hello Docker</h1>
 ```
+<img width="331" height="170" alt="image" src="https://github.com/user-attachments/assets/cb238540-eb17-4dc8-b7ea-2da745423cd2" />
 
 ---
 
