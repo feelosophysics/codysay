@@ -44,6 +44,21 @@ $ git --version
 git version 2.53.0
 ```
 
+## 수행 항목 체크리스트
+
+- [x] 터미널 기본 조작 및 폴더 구성
+- [x] 권한 변경 실습
+- [x] Docker 설치 및 점검
+- [x] hello-world 및 기본 컨테이너 실행 실습
+- [x] Dockerfile 커스텀 이미지 빌드 및 실행
+- [x] 포트 매핑 및 브라우저 접속 검증
+- [x] 바인드 마운트를 통한 파일 변경 반영 검증
+- [x] Docker 볼륨 생성 및 데이터 영속성 검증
+- [x] Git 사용자 설정 및 로컬 저장소 초기화
+- [x] VSCode와 GitHub 연동 및 푸시 완료
+- [x] (보너스) Docker Compose를 활용한 자동화 환경 구성
+
+
 ---
 
 ## 3. 터미널 기본 조작 로그
@@ -681,7 +696,7 @@ docker start test-nginx
 컨테이너 내부 상태 확인을 위해 docker exec를 사용하였고,
 실행 로그 확인을 위해 docker logs를 활용하였다.
 
-## Docker Compose
+## 12. Docker Compose
 
 <img width="253" height="205" alt="image" src="https://github.com/user-attachments/assets/48de3f5c-ab1e-443e-a9fe-33f362e157f0" />
 
@@ -743,7 +758,7 @@ docker-compose.yml을 통해 실행 환경을 코드로 관리하였다.
 
 ---
 
-## 12. Git + GitHub
+## 13. Git + GitHub
 
 ### Git 설정
 Git: 로컬 버전 관리
@@ -759,6 +774,23 @@ git config --global user.name [이름]
 git config --global user.email [이메일]
 # 의미: 누가 코드를 짰는지 이름표를 설정하는 것입니다.
 # 중요성: 나중에 협업할 때 "이 코드는 누가 수정했지?"를 확인하기 위해 처음에 한 번만 설정하면 됩니다.
+```
+
+이름과 이메일이 잘 들어갔다.
+```
+$ git config --list
+credential.helper=osxkeychain
+init.defaultbranch=main
+user.name=charlie # 이름
+user.email=f22losophysics@gmail.com # 이메일
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+remote.origin.url=https://github.com/feelosophysics/guy
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
 ```
 
 현재 상황 확인
@@ -798,9 +830,12 @@ git push -u origin main
 # -u: 처음 한 번만 해주면, 다음부터는 그냥 git push만 쳐도 자동으로 이 주소로 올라가게 기억시키는 옵션입니다.
 ```
 
+<img width="695" height="199" alt="image" src="https://github.com/user-attachments/assets/5b47d791-c9fc-48fb-98ad-0e52b51da19e" />
+
+
 ---
 
-## 13. 트러블슈팅
+## 14. 트러블슈팅
 
 ### 문제 1: git 초기 설정 방법을 찾다가, git config --global user.name을 보고, 실습에서 임의로 해석하여 git config --global charlie라고 적었는데 에러 발생.
 
@@ -810,7 +845,7 @@ git push -u origin main
 
 ---
 
-### 문제 2: ubuntu:alpine에서 bash와 zsh 실행 불가
+### 문제 2: nginx:alpine에서 bash와 zsh 실행 불가
 <img width="853" height="58" alt="image" src="https://github.com/user-attachments/assets/55e22d18-a3a4-4a2d-9b29-c67156d976fe" />
 
 * 원인 가설: exec 명령어가 뭐가 잘 안 맞나?
@@ -820,7 +855,7 @@ git push -u origin main
 
 ---
 
-## 14. 핵심 개념 정리
+## 15. 핵심 개념 정리
 
 ### 절대 경로 vs 상대 경로
 
@@ -860,6 +895,6 @@ git push -u origin main
 
 ---
 
-## 15. 결론
+## 16. 결론
 
 본 미션을 통해 개발 환경 구축부터 컨테이너 기반 실행, 데이터 관리, 협업 도구 활용까지의 전체 흐름을 경험하였다.
